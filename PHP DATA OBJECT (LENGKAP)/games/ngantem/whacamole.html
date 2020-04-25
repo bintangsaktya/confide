@@ -1,0 +1,160 @@
+<html>
+<head>
+<style>
+canvas{
+	border:5px solid #000000;
+	display:block;
+	margin:auto;
+}
+#test{
+	margin-top:-40%;
+}
+</style>
+</head>
+<body onload="startGame()">
+<script type="text/javascript">
+holes=[];
+compt=0;
+up=true;
+function startGame(){
+	gamearea.start();
+}
+function clickHandler(event){
+	if((event.pageX-274)>mole.x && (event.pageX-274)<(mole.x+40)
+		&& (event.pageY-9)>mole.y && (event.pageY-9)<(mole.y+mole.height)){
+			gamearea.context.drawImage(image,event.pageX-284,event.pageY-39,20,60);
+			winning=true;
+			gamearea.stop();
+		}
+}
+function moleOut(){
+    index=Math.floor(Math.random()*5);
+	outInterval=setInterval(appearance,10);
+}
+function appearance(){
+	mole.clear();
+	if(up){
+		mole.height+=1;
+		if(mole.height==50) up=false;
+	}else{
+		mole.height-=1;
+		if(mole.height==0){
+			up=true;
+			clearInterval(outInterval);
+		}
+	}
+	mole.draw();
+}
+var gamearea={
+	canvas:document.createElement("canvas"),
+	start:function(){
+		this.canvas.width=800;
+		this.canvas.height=600;
+		document.body.insertBefore(this.canvas,document.body.childNodes[0]);
+		this.context=this.canvas.getContext("2d");
+		this.interval=setInterval(this.update,250);
+		timer=100;
+		image=new Image();
+		image.src="lightning.png";
+		holes[0]=new hole(290,237.5);
+		holes[1]=new hole(505,237.5);
+		holes[2]=new hole(480,337.5);
+		holes[3]=new hole(265,337.5);
+		holes[4]=new hole(380,290);
+		moleInterval=setInterval(moleOut,3000);
+		window.addEventListener("click",clickHandler,event);
+	},
+	update:function(){
+		gamearea.clear();
+		gamearea.context.fillStyle="blue";
+		gamearea.context.font="30px Consolas";
+		gamearea.context.fillText("Timer: "+timer,10,50);
+		if(timer==0){
+			winning=false;
+			gamearea.stop();
+		}
+		gamearea.context.lineWidth=2;
+		gamearea.context.strokeStyle="#3d3d3d";
+		gamearea.context.fillStyle="#d1d1d1";
+		gamearea.context.beginPath();
+		gamearea.context.moveTo(220,200);
+		gamearea.context.lineTo(580,200);
+		gamearea.context.lineTo(535,380);
+		gamearea.context.lineTo(175,380);
+		gamearea.context.closePath();
+		gamearea.context.fill();
+		gamearea.context.stroke();
+		gamearea.context.beginPath();
+		gamearea.context.moveTo(580,200);
+		gamearea.context.lineTo(580,410);
+		gamearea.context.lineTo(535,590);
+		gamearea.context.lineTo(535,380);
+		gamearea.context.closePath();
+		gamearea.context.fill();
+		gamearea.context.stroke();
+		gamearea.context.beginPath();
+		gamearea.context.moveTo(535,590);
+		gamearea.context.lineTo(175,590);
+		gamearea.context.lineTo(175,380);
+		gamearea.context.lineTo(535,380);
+		gamearea.context.closePath();
+		gamearea.context.fill();
+		gamearea.context.stroke();
+		gamearea.context.lineWidth=1;
+		gamearea.context.strokeStyle="black";
+		gamearea.context.fillStyle="black";
+		for(i=0;i<5;i++) holes[i].draw();
+		timer--;
+	},
+	clear:function(){
+		gamearea.context.clearRect(0,0,800,600);
+	},
+	stop:function(){
+		window.removeEventListener("click",clickHandler,event);
+		clearInterval(gamearea.interval);
+		clearInterval(moleInterval);
+		clearInterval(outInterval);
+		gamearea.context.fillStyle="black";
+		gamearea.context.globalAlpha=0.5;
+		gamearea.context.fillRect(0,0,800,600);
+		gamearea.context.fillStyle="ivory";
+		gamearea.context.globalAlpha=1.0;
+		gamearea.context.fillRect(250,10,300,150);
+		gamearea.context.font="40px Arial Black";
+		if(winning){
+			gamearea.context.fillStyle="LawnGreen";
+			gamearea.context.fillText("You Win!!",270,100);
+		}else{
+			gamearea.context.fillStyle="red";
+			gamearea.context.fillText("You Lose!!",270,100);
+		}
+	}
+}
+function hole(x,y){
+	this.x=x;
+	this.y=y;
+	this.draw=function(){
+		gamearea.context.beginPath();
+		gamearea.context.ellipse(x,y,45,22.5,0,0,2*Math.PI);
+		gamearea.context.stroke();
+		gamearea.context.fill();
+	}
+}
+var mole={
+	height:5,
+	draw:function(){
+		this.x=holes[index].x-20;
+		this.y=holes[index].y-this.height;
+		gamearea.context.fillStyle="brown";
+		gamearea.context.fillRect(this.x,this.y,40,this.height);
+	},
+	clear:function(){
+		gamearea.context.globalAlpha=0.0;
+		gamearea.context.fillRect(this.x,holes[index].y-this.height,40,this.height);
+		gamearea.context.globalAlpha=1.0;
+	}
+}
+</script>
+<p id="test"></p>
+</body>
+</html>

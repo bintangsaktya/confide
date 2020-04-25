@@ -1,0 +1,8 @@
+[17-Feb-2020 22:54:50 UTC] PHP Fatal error:  Uncaught PDOException: SQLSTATE[28000] [1045] Access denied for user 'root'@'localhost' (using password: NO) in /home/startko1/public_html/config/database_connection.php:2
+Stack trace:
+#0 /home/startko1/public_html/config/database_connection.php(2): PDO->__construct('mysql:host=loca...', 'root', '')
+#1 /home/startko1/public_html/upload/login.php(2): include('/home/startko1/...')
+#2 {main}
+  thrown in /home/startko1/public_html/config/database_connection.php on line 2
+[19-Feb-2020 06:28:27 UTC] PHP Warning:  move_uploaded_file(upload/Screenshot_2020-02-19-13-20-56-452_com.goyal.website2apk.jpg): failed to open stream: No such file or directory in /home/startko1/public_html/upload/upload.php on line 8
+[19-Feb-2020 06:28:27 UTC] PHP Warning:  move_uploaded_file(): Unable to move '/tmp/phpAp9Xbq' to 'upload/Screenshot_2020-02-19-13-20-56-452_com.goyal.website2apk.jpg' in /home/startko1/public_html/upload/upload.php on line 8
